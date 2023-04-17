@@ -20,7 +20,7 @@ export default function Dogs({ data }) {
   );
 }
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   const slug = context.params.slug;
   const API = "https://bucolic-bombolone-857476.netlify.app/api/dogs/" + slug;
   const res = await fetch(API);
@@ -37,5 +37,19 @@ export async function getServerSideProps(context) {
     props: {
       data,
     },
+  };
+}
+
+export async function getStaticPaths() {
+  const API = "https://bucolic-bombolone-857476.netlify.app/api/dogs";
+  const res = await fetch(API);
+  const data = await res.json();
+  const paths = data.map((object) => {
+    return { params: { slug: object.slug } };
+  });
+
+  return {
+    paths,
+    fallback: false,
   };
 }
