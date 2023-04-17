@@ -1,7 +1,7 @@
 import Head from "next/head";
 import Image from "next/image";
 
-export default function Henry({ data }) {
+export default function Dogs({ data }) {
   const { content } = data;
   return (
     <>
@@ -20,15 +20,22 @@ export default function Henry({ data }) {
   );
 }
 
-export async function getStaticProps() {
-  const API = "https://bucolic-bombolone-857476.netlify.app/api/dogs/henry";
+export async function getServerSideProps(context) {
+  const slug = context.params.slug;
+  const API = "https://bucolic-bombolone-857476.netlify.app/api/dogs/" + slug;
   const res = await fetch(API);
+
+  if (res.status != 200) {
+    return {
+      notFound: true,
+    };
+  }
+
   const data = await res.json();
-  console.log(data);
 
   return {
     props: {
-      data, // This is shorthand for "data: data"
+      data,
     },
   };
 }
